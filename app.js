@@ -9,9 +9,6 @@
 </li>*/}
 
 const todoList = document.querySelector('#todo-list')
-
-
-
 function renderList(doc) {
     let li = document.createElement('li');
     li.className = "collection-item";
@@ -25,27 +22,25 @@ function renderList(doc) {
     let editBtn = document.createElement('i');
     editBtn.className = "material-icons";
     editBtn.innerText = "edit";
-    let deleteBtn = document.createElement('i');
+    let deleteBtn = document.createElement('i');;
     deleteBtn.className = "material-icons secondary-content";
-    deleteBtn.innerText = "delete"; 
+    deleteBtn.innerText = "delete";
     anchor.appendChild(editBtn);
     div.appendChild(title);
     div.appendChild(deleteBtn);
     div.appendChild(anchor);
-    div.appendChild(div);
-    deleteBtn.addEventListener('click', e=>{
+    li.appendChild(div);
+    deleteBtn.addEventListener('click', e => {
         console.log('delete')
     })
-    editBtn.addEventListener('click', e=>{
+    editBtn.addEventListener('click', e => {
         console.log('edit')
     })
 
-
     todoList.append(li);
 
+
 }
-
-
 
 db.collection('todos').orderBy('title').onSnapshot(snapshot => {
     let changes = snapshot.docChanges()
@@ -53,11 +48,11 @@ db.collection('todos').orderBy('title').onSnapshot(snapshot => {
     changes.forEach(change => {
         if (change.type == 'added') {
             renderList(change.doc);
-           
+
         } else if (change.type == 'removed') {
             console.log('removed')
         } else if (change.type == 'modified') {
             console.log('modified')
         }
-    })
+    });
 })
