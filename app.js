@@ -8,7 +8,8 @@
 </div>
 </li>*/}
 
-const todoList = document.querySelector('#todo-list')
+const todoList = document.querySelector('#todo-list');
+const form = document.querySelector('#add-todo-form')
 function renderList(doc) {
     let li = document.createElement('li');
     li.className = "collection-item";
@@ -31,7 +32,9 @@ function renderList(doc) {
     div.appendChild(anchor);
     li.appendChild(div);
     deleteBtn.addEventListener('click', e => {
-        console.log('delete')
+        console.log(e.target)
+        let id = e.target.parentElement.parentElement.getAttribute('data-id');
+        db.collection('todos').doc(id).delete();
     })
     editBtn.addEventListener('click', e => {
         console.log('edit')
@@ -42,6 +45,18 @@ function renderList(doc) {
 
 }
 
+
+form.addEventListener('submit', e => {
+    e.preventDefault();
+    db.collection('todos').add({
+        title: form.title.value
+    })
+        .form.title.value = '';
+})
+
+
+
+
 db.collection('todos').orderBy('title').onSnapshot(snapshot => {
     let changes = snapshot.docChanges()
     console.log(changes)
@@ -50,7 +65,8 @@ db.collection('todos').orderBy('title').onSnapshot(snapshot => {
             renderList(change.doc);
 
         } else if (change.type == 'removed') {
-            console.log('removed')
+           let li = todoList.querySelector(`[data-id=${change.doc.id}]`);
+           todoList.removeChild(li);
         } else if (change.type == 'modified') {
             console.log('modified')
         }
