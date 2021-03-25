@@ -1,15 +1,9 @@
-{/*<li class="collection-item" data-id="asdfsdafsdfa">
-<div>
-  Buying Food<a href="#!" class="modal-trigger secondary-content"
-    ><i class="material-icons">delete</i></a
-  ><a href="#modal1" class="modal-trigger secondary-content"
-    ><i class="material-icons">edit</i></a
-  >
-</div>
-</li>*/}
 
 const todoList = document.querySelector('#todo-list');
-const form = document.querySelector('#add-todo-form')
+const form = document.querySelector('#add-todo-form');
+const updateBtn = document.querySelector('#update');
+let newTitle = '';
+let updateId = null;
 function renderList(doc) {
     let li = document.createElement('li');
     li.className = "collection-item";
@@ -32,43 +26,45 @@ function renderList(doc) {
     div.appendChild(anchor);
     li.appendChild(div);
     deleteBtn.addEventListener('click', e => {
-        console.log(e.target)
         let id = e.target.parentElement.parentElement.getAttribute('data-id');
         db.collection('todos').doc(id).delete();
     })
     editBtn.addEventListener('click', e => {
-        console.log('edit')
+        updateId = e.target.parentElement.parentElement.parentElement.getAttribute('data-id');
     })
 
     todoList.append(li);
 
 
 }
+updateBtn.addEventListener('click', e => {
 
-
+    newTitle = document.getElementsByName('newtitle')[0].value;
+    db.collection('todos').doc(updateId).update({
+        title: newTitle
+    })
+})
 form.addEventListener('submit', e => {
     e.preventDefault();
     db.collection('todos').add({
         title: form.title.value
     })
-        .form.title.value = '';
+    form.title.value = '';
 })
-
-
-
 
 db.collection('todos').orderBy('title').onSnapshot(snapshot => {
     let changes = snapshot.docChanges()
-    console.log(changes)
     changes.forEach(change => {
         if (change.type == 'added') {
             renderList(change.doc);
 
         } else if (change.type == 'removed') {
-           let li = todoList.querySelector(`[data-id=${change.doc.id}]`);
-           todoList.removeChild(li);
+            let li = todoList.querySelector(`[data-id=${change.doc.id}]`);
+            todoList.removeChild(li);
         } else if (change.type == 'modified') {
-            console.log('modified')
+            let li = todoList.querySelector(`[data-id=${change.doc.id}]`);
+            li.getElementsByTagName('span')[0].textContent = newTitle;
+            newTitle = '';
         }
     });
 })
