@@ -141,7 +141,7 @@
       <div id="modal-signup" class="modal">
         <div class="modal-content">
           <h4>signup</h4>
-          <form action="">
+          <form action="" id="signup-form">
             <div class="input-field">
               <input
                 type="email"
@@ -158,15 +158,16 @@
                 required
               />
             </div>
+<p class="error pink-text center-align"></p>
+            <div class="modal-footer">
+              <button
+                type="submit"
+                class="modal-close waves-effect waves-green btn-flat"
+              >
+                signup
+              </button>
+            </div>
           </form>
-        </div>
-        <div class="modal-footer">
-          <button
-            type="submit"
-            class="modal-close waves-effect waves-green btn-flat"
-          >
-            signup
-          </button>
         </div>
       </div>
     </div>
@@ -192,8 +193,10 @@
       firebase.initializeApp(firebaseConfig);
       firebase.analytics();
       const db = firebase.firestore();
+      const auth = firebase.auth();
     </script>
 
     <script src="app.js"></script>
+    <script src="auth.js"></script>
   </body>
 </html>
