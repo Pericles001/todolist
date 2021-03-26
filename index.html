@@ -23,6 +23,8 @@
 
     <!-- The core Firebase JS SDK is always required and must be listed first -->
     <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-firestore.js"></script>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-auth.js"></script>
 
     <!-- TODO: Add SDKs for Firebase products that you want to use
      https://firebase.google.com/docs/web/setup#available-libraries -->
@@ -32,19 +34,44 @@
   </head>
   <body>
     <nav>
-      <div class="nav-wrapper">
+      <div class="nav-wrapper container">
         <a href="#" class="brand-logo right">TODO</a>
+        <ul id="nav-mobile">
+          <li class="logged-in">
+            <a href="" class="modal-trigger" id="logged-out">Logout</a>
+          </li>
+          <li class="logged-in">
+            <a
+              href=""
+              class="modal-trigger"
+              data-target="modal-login"
+              id="logged-in"
+              >Login</a
+            >
+          </li>
+          <li class="logged-in">
+            <a
+              href=""
+              class="modal-trigger"
+              data-target="modal-signup"
+              id="sign-up"
+              >sign-up</a
+            >
+          </li>
+        </ul>
       </div>
     </nav>
 
     <div class="container">
       <form id="add-todo-form" method="post">
         <input type="text" name="title" placeholder="Add Task" id="" />
-        <button type="submit"  class="waves-effect waves-light btn">Add Task</button>
+        <button type="submit" class="waves-effect waves-light btn">
+          Add Task
+        </button>
       </form>
 
       <ul class="collection" id="todo-list">
-       <!--
+        <!--
          <li class="collection-item">
           <div>
             Buying Food<a href="#!" class="modal-trigger secondary-content"
@@ -54,7 +81,7 @@
             >
           </div>
         </li>
-       --> 
+       -->
       </ul>
 
       <!-- Modal Trigger -->
@@ -62,14 +89,85 @@
         >Modal</a
       >
 
-      <!-- Modal Structure -->
-      <div id="modal1" class="modal">
+      <!-- edit modal-->
+      <div id="modal-edit" class="modal">
         <div class="modal-content">
-          <input type="text" name="newtitle" placeholder="Update Task">
+          <input type="text" name="newtitle" placeholder="Update Task" />
+        </div>
+        <div class="modal-footer">
+          <a
+            href="#!"
+            id="update"
+            class="modal-close waves-effect waves-green btn-flat"
+            >Update</a
+          >
+        </div>
       </div>
-      <div class="modal-footer">
-        <a href="#!" id="update" class="modal-close waves-effect waves-green btn-flat">Update</a>
-    </div>
+
+      <!-- login modal-->
+      <div id="modal-login" class="modal">
+        <div class="modal-content">
+          <h4>login</h4>
+          <form action="">
+            <div class="input-field">
+              <input
+                type="email"
+                id="login-email"
+                placeholder="email adress"
+                required
+              />
+            </div>
+            <div class="input-field">
+              <input
+                type="password"
+                id="login-password"
+                placeholder="password"
+                required
+              />
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="submit"
+            class="modal-close waves-effect waves-green btn-flat"
+          >
+            Login
+          </button>
+        </div>
+      </div>
+
+      <!-- signup modal-->
+      <div id="modal-signup" class="modal">
+        <div class="modal-content">
+          <h4>signup</h4>
+          <form action="">
+            <div class="input-field">
+              <input
+                type="email"
+                id="signup-email"
+                placeholder="email adress"
+                required
+              />
+            </div>
+            <div class="input-field">
+              <input
+                type="password"
+                id="signup-password"
+                placeholder="password"
+                required
+              />
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="submit"
+            class="modal-close waves-effect waves-green btn-flat"
+          >
+            signup
+          </button>
+        </div>
       </div>
     </div>
 
