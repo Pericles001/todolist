@@ -2,8 +2,23 @@
 const todoList = document.querySelector('#todo-list');
 const form = document.querySelector('#add-todo-form');
 const updateBtn = document.querySelector('#update');
+const logoutItems = document.querySelectorAll('.logged-out');
+const loginItems = document.querySelectorAll('.logged-in');
+let currentUser = null;
 let newTitle = '';
 let updateId = null;
+
+function setupUI(user) {
+    if (user) {
+        loginItems.forEach(item => item.style.display = 'block');
+        logoutItems.forEach(item => item.style.display = 'none');
+
+    } else {
+        loginItems.forEach(item => item.style.display = 'none');
+        logoutItems.forEach(item => item.style.display = 'block');
+    }
+}
+
 function renderList(doc) {
     let li = document.createElement('li');
     li.className = "collection-item";
@@ -51,20 +66,28 @@ form.addEventListener('submit', e => {
     })
     form.title.value = '';
 })
+function getTodos() {
+    todoList.innerHTML = '';
+    currentUser = auth.currentUser;
+    console.log('currentUser', currentUser)
+    if (currentUser === null) {
+        todoList.innerHTML = '<h3 class="center-align">Please login to get todos</h3>';
+        return;
+    }
+    db.collection('todos').orderBy('title').onSnapshot(snapshot => {
+        let changes = snapshot.docChanges()
+        changes.forEach(change => {
+            if (change.type == 'added') {
+                renderList(change.doc);
 
-db.collection('todos').orderBy('title').onSnapshot(snapshot => {
-    let changes = snapshot.docChanges()
-    changes.forEach(change => {
-        if (change.type == 'added') {
-            renderList(change.doc);
-
-        } else if (change.type == 'removed') {
-            let li = todoList.querySelector(`[data-id=${change.doc.id}]`);
-            todoList.removeChild(li);
-        } else if (change.type == 'modified') {
-            let li = todoList.querySelector(`[data-id=${change.doc.id}]`);
-            li.getElementsByTagName('span')[0].textContent = newTitle;
-            newTitle = '';
-        }
-    });
-})
+            } else if (change.type == 'removed') {
+                let li = todoList.querySelector(`[data-id=${change.doc.id}]`);
+                todoList.removeChild(li);
+            } else if (change.type == 'modified') {
+                let li = todoList.querySelector(`[data-id=${change.doc.id}]`);
+                li.getElementsByTagName('span')[0].textContent = newTitle;
+                newTitle = '';
+            }
+        });
+    })
+}
