@@ -42,7 +42,7 @@ function renderList(doc) {
     li.appendChild(div);
     deleteBtn.addEventListener('click', e => {
         let id = e.target.parentElement.parentElement.getAttribute('data-id');
-        db.collection('todos').doc(id).delete();
+        db.collection('alltodos').doc(currentUser.uid).collection('todos').doc(id).delete();
     })
     editBtn.addEventListener('click', e => {
         updateId = e.target.parentElement.parentElement.parentElement.getAttribute('data-id');
@@ -55,13 +55,13 @@ function renderList(doc) {
 updateBtn.addEventListener('click', e => {
 
     newTitle = document.getElementsByName('newtitle')[0].value;
-    db.collection('todos').doc(updateId).update({
+    db.collection('alltodos').doc(currentUser.uid).collection('todos').doc(updateId).update({
         title: newTitle
     })
 })
 form.addEventListener('submit', e => {
     e.preventDefault();
-    db.collection('todos').add({
+    db.collection('alltodos').doc(currentUser.uid).collection('todos').add({
         title: form.title.value
     })
     form.title.value = '';
@@ -69,12 +69,15 @@ form.addEventListener('submit', e => {
 function getTodos() {
     todoList.innerHTML = '';
     currentUser = auth.currentUser;
+
+    document.querySelector('#user-email').innerHTML = (currentUser != null ? currentUser.email : '');
+
     console.log('currentUser', currentUser)
     if (currentUser === null) {
         todoList.innerHTML = '<h3 class="center-align">Please login to get todos</h3>';
         return;
     }
-    db.collection('todos').orderBy('title').onSnapshot(snapshot => {
+    db.collection('alltodos').doc(currentUser.uid).collection('todos').orderBy('title').onSnapshot(snapshot => {
         let changes = snapshot.docChanges()
         changes.forEach(change => {
             if (change.type == 'added') {
